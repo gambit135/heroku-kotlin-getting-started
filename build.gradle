@@ -10,6 +10,9 @@ buildscript {
     }
 }
 
+
+mainClassName = 'com.example.Application'
+
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'kotlin'
