@@ -2,15 +2,16 @@ package com.example
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.jscience.physics.amount.Amount
+import org.jscience.physics.model.RelativisticModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import java.sql.SQLException
 import java.util.*
+import javax.measure.unit.SI
 import javax.sql.DataSource
 
 @Controller
@@ -50,6 +51,15 @@ class Controller {
         }
 
     }
+
+    @RequestMapping("/hello")
+    internal fun hello(model: MutableMap<String, Any>): String {
+        RelativisticModel.select()
+        val m = Amount.valueOf("12 GeV").to(SI.KILOGRAM)
+        model.put("science", "E=mc^2: 12 GeV = $m")
+        return "hello"
+    }
+
 
     @Bean
     @Throws(SQLException::class)
