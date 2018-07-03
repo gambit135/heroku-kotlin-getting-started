@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import java.net.URI
+import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.*
 import javax.measure.unit.SI
 import javax.sql.DataSource
+
 
 @Controller
 class Controller {
@@ -30,7 +33,17 @@ class Controller {
 
     @RequestMapping("/db")
     internal fun db(model: MutableMap<String, Any>): String {
-        val connection = dataSource.getConnection()
+
+        val jdbUri = URI(System.getenv("JAWSDB_URL"))
+
+        val username = jdbUri.userInfo.split(":")[0]
+        val password = jdbUri.userInfo.split(":")[1]
+        val port:String = jdbUri.port.toString()
+        val jdbUrl = "jdbc:mysql://" + jdbUri.host + ":" + port + jdbUri.path
+
+        val connection =  DriverManager.getConnection(jdbUrl, username, password)
+
+        //val connection = dataSource.getConnection()
         try {
             val stmt = connection.createStatement()
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)")
